@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Sign up{% endblock %}
+{% block title %}Rejestracja{% endblock %}
 
 {% block footer %}
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 	<script src="/js/hideShowPassword.min.js"></script>
 	<script src="/js/app.js"></script>
 	
@@ -11,7 +12,11 @@
 	$(document).ready(function(){
 			$('#formSignup').validate({
 				rules: {
-					name: 'required',
+					name: {
+					required: true,
+					minlength: 3,
+					maxlength: 20
+					},					
 					email: {
 						required: true,
 						email: true,
@@ -20,6 +25,7 @@
 					password: {
 						required: true,
 						minlength: 6,
+						maxlength: 20,
 						validPassword: true
 					}
 				},
@@ -40,7 +46,10 @@
 
 {% block body %}
 
-    <h1>Sign up</h1>
+	<header>
+			<h1 class="h1 text-center my-4 font-weight-bold text-uppercase ">  Planuj z nami swój budżet! </h1>
+	</header>
+	
 	{% if user.errors is not empty %}
 		<p>Errors:</p>
 			<ul>
@@ -50,24 +59,49 @@
 			</ul>
 	{% endif %}
 	
-	<form method="post" action = "/signup/create" id="formSignup" >
-		<div class="form-group">
-				<label for="inputName">Name</label>
-				<input id="inputName" name="name" placeholder="Name" autofocus  value="{{user.name}}" class="form-control"/>
-		</div>
-		
-		<div class="form-group">
-				<label for="inputEmail">Email address</label>
-				<input id="inputEmail"  type ="email" name="email" placeholder="email address"  value = "{{ user.email}}" class="form-control"/>
-		</div>
-		
-		<div class="form-group">
-				<label for="inputPassword">Password</label>
-				<input type = "password" id="inputPassword" name="password" placeholder="Password" class="form-control" />
-		</div>
-		
-		
-		<button type="submit" class="btn btn-default">Sign up</button>
-	</form>
+		<div class="container">
+		<section>
+			<div class="row">
+				<div class= "col-md-6 bg-custom py-4 my-1 mr-3" id="left"> 
+					<p>Chcesz zaoszczędzić pieniądze, ale nie wiesz jak się do tego zabrać? </p>
+					<p> Nasza aplikacja pomoże Ci uporządkować wydatki i ocenić możliwości oszczędzania</p>
+					<p class="quote">"To nie pieniądze dają szczęście, ale to, co dzięki nim można zrobić ze swoim życiem." 
+					<p class="author">Lois Frankel</p>
+				</div>
+				
+				<div  class= "col-md-6 my-3 right" id="right"> 
+					<form method="post" action = "/signup/create" id="formSignup">
+						<p> Rejestracja </p>
+						
+						<div class="input-group mb-3">
+						  <span class="input-group-text " id="basic-addon1"> <i class="icon-user"></i></span>
+						  <input type="text"  id="inputName" name="name" placeholder="Podaj imię" value="{{user.name}}" onfocus="this.placeholder=''" onblur="this.placeholder='Podaj nazwę użytkownika'" aria-label="Username" aria-describedby="basic-addon1" required >
+						</div>
+							
+						<div class="input-group mb-3">
+						  <span class="input-group-text " id="basic-addon2"> <i class="icon-mail-alt"></i></span>
+						  <input type="email" id="inputEmail" name="email" placeholder="Podaj mail" value = "{{ user.email}}" onfocus="this.placeholder=''" onblur="this.placeholder='Podaj mail'" aria-label="Username" aria-describedby="basic-addon2" required >
+						</div>
+								
+						<div class="input-group mb-3">
+						  <span class="input-group-text " id="basic-addon3"> <i class="icon-lock"></i></span>
+						  <input type="password" id="inputPassword" name="password" placeholder="Podaj hasło" onfocus="this.placeholder=''" onblur="this.placeholder='Podaj hasło'" aria-label="Password" aria-describedby="basic-addon3" required >
+						</div>
 
+		
+						<input type="submit" value="Zarejestruj się">
+						<input type="reset" value="Wyczyść formularz">
+					</form>
+						<p class="mt-4" > <a href ="/">Strona główna</a></p>			
+				</div>
+				
+			</div>
+		</section>
+		
+		<footer> 
+			<h3 class="h5 mt-4 text-center">Wszelkie prawa zastrzeżone &copy; 2021 Dziękuję za wizytę!</h3>
+		</footer>
+	
+	</div>
+	
 {% endblock %}

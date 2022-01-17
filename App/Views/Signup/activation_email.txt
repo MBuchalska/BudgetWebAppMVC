@@ -1,5 +1,17 @@
-Account activation
+Pierwszy krok do kontroli Twojego budżetu
 
-Thank you for signing up. Please click the following link to activate your account:
-
+Witaj {{name}} !
+Dziękujemy za rejestrację w naszej aplikacji. 
+Kliknij w ten link żeby aktywować konto: 
 {{ url }}
+ 
+ Jeśli nie rejestrowałeś się ostatnio w żadnej aplikacji, wystarczy że zignorujesz ten mail
+
+=======================
+This is your first step to control your home budget
+
+Thank you {{name}} for signing up. 
+Pleaseclick here to activate your account:
+{{url}}
+
+If you don't know a thing about this app, just ignore this mail

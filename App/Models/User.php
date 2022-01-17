@@ -54,8 +54,8 @@ class User extends \Core\Model
 			$this->activation_token = $token->getValue();
 			
 
-            $sql = 'INSERT INTO users (name, email, password_hash, activation_hash, is_active)
-                    VALUES (:name, :email, :password_hash, :activation_hash, 0)';
+            $sql = 'INSERT INTO users (userID, userName, email, password_hash, activation_hash, is_active)
+                    VALUES (NULL, :name, :email, :password_hash, :activation_hash, 0)';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -64,12 +64,84 @@ class User extends \Core\Model
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
             $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
             $stmt->bindValue(':activation_hash', $hashed_token, PDO::PARAM_STR);
-
-            return $stmt->execute();
+			$stmt->execute();
+			
+			//adds default values for the user
+			//$thisUserName = $this->email; - chyba niepotrzebne
+				
+			$sql="SELECT userID FROM users WHERE email=:email";
+			$stmt=$db->prepare($sql);
+			$stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+			$stmt->execute();
+			$IDs = $stmt->fetch();   ;
+			$ID=$IDs[0];
+			
+			$this->addDefaultSettings($ID);
+			
+            return true;
         }
 
         return false;
     }
+
+protected function addDefaultSettings($ID){
+	//adding default expenses to settings
+	$db = static::getDB();
+	
+	$sql='SELECT expenseCatID FROM expense_categories WHERE IfDefault=1';
+	$stmt = $db->prepare($sql);
+	$stmt->execute();
+	
+	$expNumber=$stmt->rowCount();
+	for($i=1; $i<=$expNumber; $i++){
+		$numbers= $stmt->fetch();   ;
+		$number=$numbers['expenseCatID'];
+		
+		$insert='INSERT INTO expense_settings VALUES (NULL, :id, :number)';		
+		$stmt2 = $db->prepare($insert);
+		$stmt2->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt2->bindValue(':number', $number, PDO::PARAM_STR);
+		$stmt2->execute();
+	}
+
+		
+	// adding default income settings
+	$sqlInc='SELECT incomeCatID FROM income_categories WHERE IfDefault=1';
+	$stmtInc = $db->prepare($sqlInc);
+	$stmtInc->execute();
+	
+	$incNumber=$stmtInc->rowCount();
+	for($i=1; $i<=$incNumber; $i++){
+		$numbers= $stmtInc->fetch();   ;
+		$number=$numbers['incomeCatID'];
+		
+		$insertInc='INSERT INTO income_settings VALUES (NULL, :id, :number)';		
+		$stmt3 = $db->prepare($insertInc);
+		$stmt3->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt3->bindValue(':number', $number, PDO::PARAM_STR);
+		$stmt3->execute();
+	}	
+	
+	// adding default payment methods 
+	$sqlPay='SELECT payMethCatID FROM pay_method_categories WHERE IfDefault=1';
+	$stmtPay = $db->prepare($sqlPay);
+	$stmtPay->execute();
+	
+	$payNumber=$stmtPay->rowCount();
+	for($i=1; $i<=$payNumber; $i++){
+		$numbers= $stmtPay->fetch();   ;
+		$number=$numbers['payMethCatID'];
+		
+		$insertPay='INSERT INTO pay_method_settings VALUES (NULL, :id, :number)';		
+		$stmt4 = $db->prepare($insertPay);		
+		$stmt4->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt4->bindValue(':number', $number, PDO::PARAM_STR);
+		$stmt4->execute();
+	}	
+	
+	
+}
+
 
     /**
      * Validate current property values, adding valiation error messages to the errors array property
@@ -120,7 +192,7 @@ class User extends \Core\Model
         $user = static::findByEmail($email);
 		
 		if($user){
-			if ($user->id != $ignore_id){
+			if ($user->userID != $ignore_id){
 				return true;
 			}
 		}
@@ -179,7 +251,7 @@ class User extends \Core\Model
      */
     public static function findByID($id)
     {
-        $sql = 'SELECT * FROM users WHERE id = :id';
+        $sql = 'SELECT * FROM users WHERE userID = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -325,24 +397,29 @@ class User extends \Core\Model
 
         $text = View::getTemplate('Signup/activation_email.txt', ['url' => $url]);
         $html = View::getTemplate('Signup/activation_email.html', ['url' => $url]);
-
-        Mail::send($this->email, 'Account user', 'Account activation', $text, $html);
+		$mailTitle =  'Aktywacja konta w aplikacji do planowania wydatkow';
+		
+        Mail::send($this->email, $this->name, $mailTitle, $text, $html);
     }
 	
 	public static function activate($value){
 		$token = new Token($value);
 		$hashed_token = $token->getHash();
 		
+		$registration_date= time();
+		
 		$sql = 'UPDATE users
                 SET is_active = 1,
-                    activation_hash = null
+                    activation_hash = null,
+					registration_date = :registration_date 
                 WHERE activation_hash = :hashed_token';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-
-        $stmt->bindValue(':hashed_token', $hashed_token, PDO::PARAM_STR);
-
+        
+		$stmt->bindValue(':registration_date', date('Y-m-d H:i:s', $registration_date), PDO::PARAM_STR);
+		$stmt->bindValue(':hashed_token', $hashed_token, PDO::PARAM_STR);
+		
         $stmt->execute();    
 	}
 	
@@ -361,7 +438,7 @@ class User extends \Core\Model
         if (empty($this->errors)) {
 
             $sql = 'UPDATE users
-                    SET name = :name,
+                    SET userName = :name,
                         email = :email';
 
             // Add password if it's set
@@ -369,7 +446,7 @@ class User extends \Core\Model
                 $sql .= ', password_hash = :password_hash';
             }
 
-            $sql .= "\nWHERE id = :id";
+            $sql .= "\nWHERE userID = :id";
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);

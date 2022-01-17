@@ -1,28 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/styles.css" />
+    <html lang="pl">
+	<meta charset="UTF-8">
+    <title>{% block title %} {% endblock %}</title>
+	<meta name="description" content ="Aplikacja pomoże ci zapanować nad swoim domowym budżetem"/>
+	<meta name="keywords" content="budżet, planowanie wydatków, zestawienia budżetowe"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"> 
+	
+	 <link rel="stylesheet" href="/css/styles.css" />
+	 <link rel="stylesheet" href="/css/fontello.css" type="text/css"/>
+	 
 </head>
 <body>
 	<div class="container" >
-		<nav class="navbar navbar-default" >
-			<div class="container-fluid">
-				<ul class="nav navbar=nav">
-					<li><a href="/">Home</a></li>
-				</ul>
-				
-				<ul class="nav navbar-nav navbar-right">
-					{% if current_user %}
-						<li><a href="/profile/show">Profile</a></li>
-						<li><a href="/logout">Log out</a></li>
-					{% endif %}
-				</ul>
-			</div>
-		</nav>
-	
+	{% if current_user %}
+		<nav class="navbar navbar-dark bg-nav navbar-expand-md mx-auto">
+			
+			<a class="navbar-brand" href="menu.php"><i class="icon-dollar"></i> YourBudgetApp</a>
+			
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu" aria-controls="menu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+			<span class="navbar-toggler-icon"></span>
+			</button>
+			
+				<div class="collapse navbar-collapse" id="menu" > 
+					<ul class="navbar-nav mx-auto">
+						<li class="nav-item"><a class="nav-link" href="income.php">Dodaj przychód </a></li>
+						<li class="nav-item"><a class="nav-link" href="expense.php">Dodaj wydatek</a></li>
+						<li class="nav-item"><a class="nav-link" href="balance.php">Przeglądaj bilans</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">Ustawienia </a></li>
+						<li class="nav-item"><a class="nav-link" href="logout.php"><i class="icon-logout"></i>Wyloguj się </a></li>
+					</ul>
+				</div>
+			</nav>
+	{% endif %}
 	
     {% for message in flash_messages %}
         <div class="alert alert-{{ message.type }}">
@@ -34,10 +51,17 @@
     {% endblock %}
 	</div>
 	
+	{% block footer %}
+	<footer> 
+			<h3 class="h5 mt-4 text-center">Wszelkie prawa zastrzeżone &copy; 2021 Dziękuję za wizytę!</h3>
+	</footer>
+			{% endblock %}
+			
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
 
-    {% block footer %}
-    {% endblock %}
+	
+		
 </body>
 </html>

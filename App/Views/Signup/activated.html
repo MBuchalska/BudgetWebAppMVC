@@ -3,9 +3,25 @@
 {% block title %}Sign up{% endblock %}
 
 {% block body %}
-
-    <h1>Sign up</h1>
-
-    <p>Success! Your account is now active. You can now <a href="/login">log in</a>.</p>
-
+	<header>
+			<h1 class="h1 text-center my-4 font-weight-bold text-uppercase ">  Planuj z nami swój budżet! </h1>
+	</header>
+	
+	
+	<div class="container">
+		<section>
+			<div class="row">
+				<div class= "col-md-6 bg-custom py-4 my-1 mr-3" id="left"> 
+					<p> Dziękujemy za aktywację konta </p>			
+				</div>
+				
+				<div  class= "col-md-6 my-3 right" id="right"> 
+					<p> Możesz się teraz zalogować na swoje konto </p>
+					<p> <a href="/login">Zaloguj się</a>.</p>
+					<p class="mt-4" > <a href ="/">Strona główna</a></p>			
+				</div>
+			</div>
+		</section>
+    </div>
+	
 {% endblock %}
