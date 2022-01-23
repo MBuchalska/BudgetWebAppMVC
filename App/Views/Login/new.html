@@ -2,6 +2,10 @@
 
 {% block title %}Logowanie{% endblock %}
 
+{% block footer %}
+	<script src="/js/hideShowPassword.min.js"></script>
+{% endblock %}
+
 {% block body %}
 
    <header>
@@ -24,7 +28,7 @@
 						
 						<div class="input-group mb-3">
 						  <span class="input-group-text " id="basic-addon1"> <i class="icon-user"></i></span>
-						  <input type="email" d="inputEmail" name="email" placeholder="Podaj  mail" onfocus="this.placeholder=''" onblur="this.placeholder='Podaj mail'" aria-label="Username" aria-describedby="basic-addon1" required  value="{{email}}" >
+						  <input type="email" id="inputEmail" name="email" placeholder="Podaj  mail" onfocus="this.placeholder=''" onblur="this.placeholder='Podaj mail'" aria-label="Username" aria-describedby="basic-addon1" required  value="{{email}}" >
 						</div>
 						
 						<div class="input-group mb-3">

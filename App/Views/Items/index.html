@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
 
-{% block title %} Items {% endblock %}
+{% block title %} Witaj miłośniku oszczędzania! {% endblock %}
 
 {% block body %}
-	<h1> Items </h1>
-	<p> Here is the index of items </p>
-
+	
+		<div class="container">		
+			<section>
+				<div class="row"> 
+					<div class="col-md-8 mx-auto my-5">
+						<p> Witaj {{ user.userName }}!</p>
+						<p class="text-justify"> Witaj w aplikacji, która pomoże Ci prowadzić Twój domowy budżet. Dodawaj przychody i wydatki, przeglądaj zestawienia i dzięki temu naucz się oczszędzać.</p>
+						<p class ="quote"> "Pieniądze czynią ludzi bogatymi, natomiast błędem jest sądzić, że czynią ich lepszymi albo nawet gorszymi. O ludziach świadczą ich uczynki oraz to, jaki ślad po sobie zostawiają" </p>
+						<p class ="author"> Terry Pratchett, "Spryciarz z Londynu" </p>
+					</div>
+				</div>
+			</section>
+	</div>
+	
 {%endblock %}

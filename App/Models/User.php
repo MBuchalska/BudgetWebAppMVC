@@ -318,13 +318,13 @@ protected function addDefaultSettings($ID){
 		$sql = 'UPDATE users 
 					SET password_reset_hash = :token_hash, 
 							password_reset_exp=:expires_at
-					WHERE id=:id';
+					WHERE userID=:id';
 		$db = static::getDB();
 		$stmt = $db->prepare($sql);
 		
 		$stmt->bindValue(':token_hash', $hashed_token, PDO::PARAM_STR);
         $stmt->bindValue(':expires_at', date('Y-m-d H:i:s', $expiry_timestamp), PDO::PARAM_STR);
-        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $this->userID, PDO::PARAM_INT);
 
         return $stmt->execute();
 	}
@@ -332,10 +332,10 @@ protected function addDefaultSettings($ID){
 	protected function sendPasswordResetEmail(){
 		$url = 'http://' . $_SERVER['HTTP_HOST'] . '/password/reset/' . $this->password_reset_token;
 		
-		$text = View::getTemplate('Password/reset_email.txt', ['url' => $url]);
-        $html = View::getTemplate('Password/reset_email.html', ['url' => $url]);
-
-        Mail::send($this->email, 'Password reset', $text, $html);
+		$text = View::getTemplate('Password/reset_email.txt', ['url' => $url,'user'=>$this->userName]);
+        $html = View::getTemplate('Password/reset_email.html', ['url' => $url, 'user'=>$this->userName]);
+		$subject = 'Reset hasla w aplikacji budzetowej';
+        Mail::send($this->email, $this->userName, $subject, $text, $html);
 		
 	}
 	
@@ -377,12 +377,12 @@ protected function addDefaultSettings($ID){
 						SET password_hash = :password_hash,
 						password_reset_hash = NULL,
                         password_reset_exp = NULL
-						WHERE id = :id';
+						WHERE userID = :id';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $this->userID, PDO::PARAM_INT);
             $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
 
             return $stmt->execute();

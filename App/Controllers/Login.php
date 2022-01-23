@@ -42,8 +42,8 @@ class Login extends \Core\Controller
 			//tu będą ciastka
 			
 			Flash::addMessage('Login successful');
-			
-            $this->redirect(Auth::getReturnToPage());
+			$this->redirect('/Items/index');
+            //$this->redirect(Auth::getReturnToPage());
 
         } else {
 			Flash::addMessage('Login unsuccessful, please try again', Flash::WARNING);
@@ -68,10 +68,12 @@ class Login extends \Core\Controller
 	
 	public function showLogoutMessageAction(){
 		Flash::addMessage('Logout successful');
-        $this->redirect('/');          
+        $this->redirect('/login/done');          
 	}
 	
-	
+	public function doneAction(){
+		View::renderTemplate('login/done.html');
+	}
 	
 	
 }
