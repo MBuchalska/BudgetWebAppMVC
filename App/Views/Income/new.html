@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %} Dodaj przychod {% endblock %}
+
+{% block body %}
+<script src="/js/app.js"></script>
+	
+	<div class="container">			
+		<section>
+			<div class="row">	
+				<h2 class="mt-4 col-md-8 mx-md-auto fs-2"> Uzupełnij formularz i dodaj przychód </h2>
+				<form action="/Income/create" method="post" class="col-md-8 mx-md-auto fs-2">
+					
+						<p class="mt-5" ><label> Kwota przychodu:  <input type="number" name="incomevalue" step="0.01" required aria-label="Kwota przychodu"></label></p>
+						
+						<p class="mt-5"><label aria-label="Data">  Data: <input type="date" name="incDate" id="incDate" class="form__date" required ></label></p>
+						
+						<label class="mt-5 font-weight-bold "> Kategoria przychodu:</label>	
+						
+							{% for  incomeRecord in income %}
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="whatIncome" id="whatIncome" value= "{{  incomeRecord.categoryID }}" required>
+									<label class="form-check-label" for="whatIncome" >  {{ incomeRecord.incomeCatName }}</label>
+								</div>
+							{% endfor %}
+							
+							<input type="text" name="IncComment" placeholder="Komentarz do przychodu" onfocus="this.placeholder=''" onblur="this.placeholder='Komentarz'" class="mt-3"> 
+							
+						<div class="mt-5">
+							<input type="submit" value="Dodaj">
+							<input type="reset" value="Anuluj">
+						</div>
+					
+				</form>	
+			</div>
+		</section>
+	</div>
+	
+	
+	
+{%endblock %}
