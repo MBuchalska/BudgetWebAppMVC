@@ -1,42 +1,36 @@
-//Expense and income - insert initial date, today
+//getting the value of incomes 
 
-window.onload = getDate;
+var incomesTable = document.getElementById("incomeTable");
+var incomeRows = incomesTable.rows.length;
+var incomeSum = 0;
 
-function getDate(){
-	var today = new Date();
-			
-	var day = today.getDate();
-	var month = today.getMonth()+1;
-	var year = today.getFullYear();
-		
-		if (month<10) month="0"+month;
-		if (day<10) day="0"+day;
-		
-	var DateNow = year+"-"+month+"-"+day;
-
-	const dateInput = document.querySelector('.form__date');
-	dateInput.value = DateNow;
+for (var i =1; i < incomeRows; i++) { 
+	incomeSum+=parseFloat(incomesTable.rows[i].cells[1].innerHTML);
 }
 
-//Balance - make date range visible in case of custom date range
+incomeSum = incomeSum.toFixed(2);
+document.getElementById("IncomeSum").innerHTML = incomeSum;
 
-var RangeOption = document.getElementById("BParameters");
 
-RangeOption.addEventListener("click", function() {MakeDateRangeVisible()} );  
+//getting the value of expenses 
 
-function MakeDateRangeVisible(){
-	var DateRangeOption =document.getElementById("BParameters").value;
- 	
-	if (DateRangeOption == 41) $('.dates').css('display', 'block');
-	else  $('.dates').css('display', 'none');
+var expensesTable = document.getElementById("expenseTable");
+var expenseRows = expensesTable.rows.length;
+var expenseSum = 0;
+
+for (var i =1; i < expenseRows; i++) { 
+	expenseSum+=parseFloat(expensesTable.rows[i].cells[1].innerHTML);
 }
+
+expenseSum = expenseSum.toFixed(2);
+document.getElementById("ExpenseSum").innerHTML = expenseSum;
+
 
 // Balance - calculate the balance and show how is your budget
 
 var table = document.getElementById("summaryTab");
 var incomes = table.rows[0].cells[1].innerHTML;
 var expenses = table.rows[1].cells[1].innerHTML;
-
 
 var balance = incomes - expenses;
 balance = balance.toFixed(2);
@@ -53,3 +47,35 @@ else if (balance < 0){
 else if (balance = 0) document.getElementById("yourBudget").innerHTML="Jesteś mistrzem prowadzenia budżetu!";
 
 
+// Balance - generating the chart
+
+//var x =  expensesTable.rows[1].cells[0].innerHTML;
+//var y =  parseFloat(expensesTable.rows[2].cells[1].innerHTML);
+
+//document.getElementById("temp2").innerHTML = x;
+
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+
+function drawChart() {
+var data = google.visualization.arrayToDataTable([
+        ['Wydatek', 'Kwota'],		  
+          ['Sleep',     256],
+          ['Eat',      235],
+          [expensesTable.rows[1].cells[0].innerHTML,  2],
+          ['Watch TV', 2],
+          ['Sleep',    7],
+
+]);
+
+var options = {
+  title: 'Zestawienie wydatków',
+  backgroundColor: '#ecc9c2',
+  fontSize: 18,
+  fontName: 'Lato',
+};
+
+var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+}
