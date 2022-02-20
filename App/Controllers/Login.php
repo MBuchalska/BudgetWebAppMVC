@@ -72,7 +72,7 @@ class Login extends \Core\Controller
 	}
 	
 	public function doneAction(){
-		View::renderTemplate('login/done.html');
+		View::renderTemplate('Login/done.html');
 	}
 	
 	
