@@ -10,8 +10,8 @@
 
 {% block body %}
 
-
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script> const expensesJson= '{{ expense|json_encode|raw }}'</script>
 	
 	<div class="container">			
 		<section>
@@ -97,8 +97,11 @@
 						</tbody>
 					</table>
 				</div> 
+
+				<div class="col-md-8 mx-md-auto">
+				  <canvas id="piechart"></canvas>
+				</div>
 				
-				<div id="piechart" class="col-md-8 mx-md-auto"> wykres kołowy wydatków </div>
 				
 				
 				

@@ -17,14 +17,17 @@ document.getElementById("IncomeSum").innerHTML = incomeSum;
 var expensesTable = document.getElementById("expenseTable");
 var expenseRows = expensesTable.rows.length;
 var expenseSum = 0;
+var expenseLabels = [];
+var expenseValues = [];
 
 for (var i =1; i < expenseRows; i++) { 
 	expenseSum+=parseFloat(expensesTable.rows[i].cells[1].innerHTML);
+	expenseLabels.push(expensesTable.rows[i].cells[0].innerHTML);
+	expenseValues.push(parseFloat(expensesTable.rows[i].cells[1].innerHTML));
 }
 
 expenseSum = expenseSum.toFixed(2);
 document.getElementById("ExpenseSum").innerHTML = expenseSum;
-
 
 // Balance - calculate the balance and show how is your budget
 
@@ -44,38 +47,36 @@ else if (balance < 0){
 	document.getElementById("yourBudget").innerHTML="Niedobrze. Trzeba zminiejszyć wydatki";
 	$('#yourBudget').css('color','red');
 }
-else if (balance = 0) document.getElementById("yourBudget").innerHTML="Jesteś mistrzem prowadzenia budżetu!";
+else if (balance == 0) document.getElementById("yourBudget").innerHTML="Jesteś mistrzem prowadzenia budżetu!";
 
 
 // Balance - generating the chart
 
-//var x =  expensesTable.rows[1].cells[0].innerHTML;
-//var y =  parseFloat(expensesTable.rows[2].cells[1].innerHTML);
+  const data = {
+    labels: expenseLabels,
+    datasets: [{
+      label: 'Wykres wydatków',
+      backgroundColor: [
+		  'rgb(255, 99, 132)', 
+		  'rgb(54, 162, 235)',
+		  'rgb(255, 204, 0)' ,
+		  'rgb(255, 105, 86)' ,
+		  'rgb(155, 205, 86)' 
+	  ],
+      borderColor: '#130838',
+	  borderWidth: 0.8,
+	  color: '#130838',
+      data: expenseValues,
+    }]
+  };
 
-//document.getElementById("temp2").innerHTML = x;
-
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-
-
-function drawChart() {
-var data = google.visualization.arrayToDataTable([
-        ['Wydatek', 'Kwota'],		  
-          ['Sleep',     256],
-          ['Eat',      235],
-          [expensesTable.rows[1].cells[0].innerHTML,  2],
-          ['Watch TV', 2],
-          ['Sleep',    7],
-
-]);
-
-var options = {
-  title: 'Zestawienie wydatków',
-  backgroundColor: '#ecc9c2',
-  fontSize: 18,
-  fontName: 'Lato',
-};
-
-var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        chart.draw(data, options);
-}
+  const config = {
+    type: 'pie',
+    data: data,
+    options: {}
+  };
+  
+  const myChart = new Chart(
+    document.getElementById('piechart'),
+    config
+  );
