@@ -39,8 +39,7 @@ class Login extends \Core\Controller
         if ($user) {
 			
 			Auth::login($user, $remember_me);
-			//tu będą ciastka
-			
+
 			Flash::addMessage('Login successful');
 			$this->redirect('/Items/index');
             //$this->redirect(Auth::getReturnToPage());
@@ -68,7 +67,7 @@ class Login extends \Core\Controller
 	
 	public function showLogoutMessageAction(){
 		Flash::addMessage('Logout successful');
-        $this->redirect('/login/done');          
+        $this->redirect('/Login/done');          
 	}
 	
 	public function doneAction(){

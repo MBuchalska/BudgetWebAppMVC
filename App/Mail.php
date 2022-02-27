@@ -25,9 +25,12 @@ class Mail
      */
     public static function send($to, $userName, $subject, $text, $html)
     {
-        $mail = new PHPMailer();
+      
+		$mail = new PHPMailer();
 		
 		$mail->isSMTP();
+		$mail->CharSet = 'utf-8';
+		$mail->Encoding = 'base64';
 		$mail->Host = Config::MAIL_HOST;    // z usługi mailowej hosta
 		$mail->SMTPAuth = true;
 		$mail->Username = Config::MAIL_DOMAIN; //z usługi mailingowej 

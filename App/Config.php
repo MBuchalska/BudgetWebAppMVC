@@ -14,19 +14,19 @@ class Config
      * Database host
      * @var string
      */
-    const DB_HOST = '';  
+    const DB_HOST = 'localhost';
 
     /**
      * Database name
      * @var string
      */
-    const DB_NAME = ''; 
+    const DB_NAME = 'budgetmvc';
 
     /**
      * Database user
      * @var string
      */
-    const DB_USER = '';
+    const DB_USER = 'root';
 
     /**
      * Database password
@@ -41,17 +41,17 @@ class Config
     const SHOW_ERRORS = true;
 	
 	// secret key for hashing
-	const SECRET_KEY ='';
+	const SECRET_KEY ='YE3WGofMvvaSLGej5kCTi51OXciBv2yw';
 	
-	// your mailing domain data
+	// sending domain data
 	
-	const MAIL_PASS = '';
+	const MAIL_PASS = 'Maly_kot3k';
 	
-	const MAIL_DOMAIN = '';
+	const MAIL_DOMAIN = 'mbuchalska@martabuchalska.pl';
 	
-	const MAIL_HOST = '';
+	const MAIL_HOST = 'mail.martabuchalska.pl';
 	
-	const MAIL_SENDER = '';
+	const MAIL_SENDER = 'Your Admin';
 	
 	
 }
