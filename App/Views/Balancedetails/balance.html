@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %} Wygeneruj bilans {% endblock %}
+
+{%block head %}
+
+
+{%endblock %}
+
+
+{% block body %}
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script> const expensesJson= '{{ expense|json_encode|raw }}'</script>
+	
+	<div class="container">			
+		<section>
+			<div class="row">	
+				<h2 class="mt-4 col-md-8 mx-md-auto fs-2"> Wybierz zakres bilansu szczegółowego </h2>
+				<form action="/Balancedetails/create" method ="post" class="mt-5 col-md-8 mx-md-auto" > 
+					<label for="BParameters"> Parametry bilansu: </label>
+					<select id="BParameters" name="BParameters" size="1" required>
+						<option value=""> wybierz z listy </option>
+						<option value="11" selected>bieżący miesiąc</option>
+						<option value="21">poprzedni miesiąc</option>
+						<option value="31">bieżący rok</option>
+						<option value="41">zakres niestandardowy</option>
+					</select>
+						
+					<div class="dates mt-3">
+						<label>  Data od: <input type="date" name="Date1"  value="2020-01-01"></label>
+						<label>  Data do: <input type="date" name="Date2" id="Date2" class="form__date"></label>	
+					</div>
+					
+					<div class="mt-5">
+						<input type="submit" value="Pokaż bilans">
+					</div>
+				</form>
+				
+				<div class="col-md-5 mt-3 mx-md-auto"> Tabela z wydatkami
+					<table class="table mt-3" id="expenseTable2">
+						<thead>	
+							<tr>
+								<th scope="col">wydatek</th>
+								<th scope="col">data</th>
+								<th scope="col">kwota [PLN]</th>
+								<th scope="col">komentarz</th>
+							</tr>
+						</thead>
+						<tbody>					
+								{% for expenseRecord in expense %}
+									<tr>
+										<td> {{ expenseRecord.expenseCatName }}</td>
+										<td> {{ expenseRecord.data }}</td>
+										<td class="cell"> {{ expenseRecord.amount|number_format(2,'.','') }} </td>
+										<td class="cell"> {{ expenseRecord.comment }} </td>
+									</tr>
+								{% endfor %}
+						</tbody>
+					</table>
+				</div>		
+				
+				<div class="col-md-5 mt-3"> 
+					<div class="income"> Tabela z przychodami
+						<table class="table mt-3" id="incomeTable2">
+							<thead>
+								<tr>
+									<th scope="col">przychód</th>
+									<th scope="col">data</th>
+									<th scope="col">kwota [PLN]</th>
+									<th scope="col">komentarz</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for incomeRecord in income %}
+									<tr>
+										<td> {{ incomeRecord.incomeCatName }}</td>
+										<td> {{ incomeRecord.data }}</td>
+										<td class="cell"> {{ incomeRecord.amount|number_format(2,'.','') }} </td>
+										<td> {{ incomeRecord.comment }} </td>
+									</tr>				
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>				
+			</div>
+		</section>
+	</div>
+	
+	
+	
+{%endblock %}
+

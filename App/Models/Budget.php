@@ -240,4 +240,33 @@ class Budget extends \Core\Model
 	}
 	
 	
+	public static function getIncomesDetailsByDate($Date1, $Date2, $ID){
+		$sql = "SELECT icat.incomeCatName, inc.data, inc.comment, inc.amount FROM  income_categories AS icat, incomes AS inc WHERE userID=:id AND inc.data >=:data1 AND inc.data<=:data2 AND inc.amount>0  AND inc.categoryID=icat.incomeCatID ORDER BY inc.categoryID, inc.data ASC";
+			
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+			
+		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt->bindValue(':data1', $Date1, PDO::PARAM_STR);
+		$stmt->bindValue(':data2', $Date2, PDO::PARAM_STR);
+      	$stmt->execute();
+				
+		return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+	}
+	
+	public static function getExpensesDetailsByDate($Date1, $Date2, $ID){
+		$sql = "SELECT ecat.expenseCatName, exp.data, exp.comment, exp.amount FROM  expense_categories AS ecat, expenses AS exp WHERE userID=:id AND exp.data >=:data1 AND exp.data<=:data2 AND exp.amount>0  AND exp.categoryID=ecat.expenseCatID ORDER BY exp.categoryID , exp.data ASC";
+			
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+			
+		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt->bindValue(':data1', $Date1, PDO::PARAM_STR);
+		$stmt->bindValue(':data2', $Date2, PDO::PARAM_STR);
+      	$stmt->execute();
+			//var_dump($stmt->fetchAll(PDO::FETCH_ASSOC));
+		return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+	}
+	
+	
 }
