@@ -112,10 +112,25 @@ input[type=reset]:hover
 	margin: 5px;
 }
 
+#menu ul > li > ul
+{
+	display: none;
+	border: 1px dotted #fff;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
 #menu ul > li:hover
 {
 	background-color: #ecc9c2;
 	cursor: pointer;
+
+}
+
+#menu ul > li:hover > ul
+{
+	display: block;
 }
 
 #menu ul > li:hover > a
@@ -123,6 +138,13 @@ input[type=reset]:hover
 	color: #2d1385;
 }
  
+ #menu ul > li > ul > li
+{
+	background-color: #cf6969;
+	position: relative;
+	z-index: 100;
+}
+
 .content
 {
 	float: left;
