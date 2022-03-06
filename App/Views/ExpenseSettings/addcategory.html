@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Dodaj kategorię{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+	
+	<h1 class="mt-4 col-md-8 mx-md-auto fs-2">Ustawienia </h1>
+	<h2 class="mt-4 col-md-8 mx-md-auto fs-4">Kategorie wydatków </h2>
+		<section>
+			<div class="row mt-4 col-md-8 mx-md-auto">
+				<p> Dodawanie nowej kategorii </p>
+				<p> W tej chwili masz kategorie jak poniżej </p>
+				<p> Podaj nazwę nowej kategorii w polu tekstowym </p>
+						
+				{% for  expenseRecord in expense %}
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="whatExpense2" id="whatIncome2" value= "{{ expenseRecord.categoryID }}">
+						<label class="form-check-label" for="whatExpense2" >  {{ expenseRecord.expenseCatName }}</label>
+					</div>
+				{% endfor %}
+				
+				<form action="/ExpenseSettings/add" method="post" class="col-md-8 mx-md-auto fs-2">
+				
+				<input type="text" name="NewExpenseCat" placeholder="Nowa kategoria " onfocus="this.placeholder=''" onblur="this.placeholder='Podaj nową kategorię'" class="mt-3"> 
+				
+				<div class="mt-5">
+					<input type="submit" value="Wykonaj">
+					<input type="reset" value="Anuluj">
+				</div>
+			</form>	
+				
+			</div>
+			
+			
+		</section>
+	</div>
+{% endblock %}

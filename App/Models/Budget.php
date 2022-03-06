@@ -290,6 +290,8 @@ class Budget extends \Core\Model
 				$this->addIncomeCategory($category); // add to categories			
 				$newCategoryID = $this->findIncomeCategoryID($category); // find the ID of newly added category
 				$this->addIncomeCategoryToUserSettings($ID, $newCategoryID); // adding to settings
+				
+				return true;
 			}
 			
 		else {
@@ -439,6 +441,178 @@ class Budget extends \Core\Model
 	}
 	
 	
+	// Expense categories settings
+	
+	public function deleteExpenseCat(){
+		$ID= $_SESSION['user_id'];
+		$categoryID = $this->whatExpense2;
+		
+		$this->deleteExpenseCategory($ID, $categoryID); 
+			
+		return true;
+	}
+	
+	
+	public function addExpenseCat(){
+		$ID= $_SESSION['user_id'];
+		$category=$this-> NewExpenseCat;
+
+		$categoryID=$this->findExpenseCategoryID($category);
+		
+		if ($categoryID == 0) {	
+				$this->addExpenseCategory($category); // add to categories			
+				$newCategoryID = $this->findExpenseCategoryID($category); // find the ID of newly added category
+				$this->addExpenseCategoryToUserSettings($ID, $newCategoryID); // adding to settings
+				
+				return true;
+			}
+			
+		else {
+			$categoryID2 = $this->findExpenseCategoryInUserSettings($categoryID, $ID);
+		
+			if ($categoryID2 != 0) return false;	
+			
+			else{
+				$this->addExpenseCategoryToUserSettings($ID, $categoryID); // add an existing category to settings
+				
+				return true;
+			}
+		}	
+	}
+	
+	public function changeExpenseCat(){
+		$ID= $_SESSION['user_id'];
+		$categoryName=$this-> ChangeExpenseCat;
+		$categoryToChangeID=$this-> whatExpense3;
+		
+		$newCategoryID=$this->findExpenseCategoryID($categoryName);
+		
+		if($newCategoryID == 0){
+			$this->addExpenseCategory($categoryName); // add to categories
+			$newlyAddedCategoryID = $this->findExpenseCategoryID($categoryName); // find the ID of newly added category
+			$this->addExpenseCategoryToUserSettings($ID, $newlyAddedCategoryID); // adding to user settings
+			$this->deleteExpenseCategory($ID, $categoryToChangeID);  //delete old category
+			$this->rewriteExpenseRecords($ID, $newlyAddedCategoryID, $categoryToChangeID); // rewrite old category for new
+			
+			return true;
+		}
+		
+		else {
+			$categoryID2 = $this->findExpenseCategoryInUserSettings($newCategoryID, $ID);
+			
+			if ($categoryID2 !=0) return false;	
+			
+			else{
+				$this->addExpenseCategoryToUserSettings($ID, $newCategoryID); // add an existing category to settings
+				$this->deleteExpenseCategory($ID, $categoryToChangeID);  //delete old category
+				$this->rewriteExpenseRecords($ID, $newCategoryID, $categoryToChangeID); // rewrite old category for new
+				
+				return true;
+			}
+		}		
+	}
+	
+	
+	
+	protected function deleteExpenseCategory($ID, $categoryID){
+		$sql="DELETE FROM expense_settings WHERE userID=:id AND categoryID=:categoryID";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt->bindValue(':categoryID', $categoryID, PDO::PARAM_STR);
+		
+		$stmt->execute();
+		
+		return true;
+	}
+		
+	protected function findExpenseCategoryInUserSettings($category, $ID){
+		$sql="SELECT * FROM expense_settings WHERE categoryID=:category AND userID=:id";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':category', $category, PDO::PARAM_STR);
+		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
+		
+		$stmt->execute();
+		$result= $stmt->fetch(PDO::FETCH_ASSOC);
+		$rows=$stmt->rowCount();
+			
+		if ($rows == 0) return 0;
+		else {			
+			$categoryID=$result['categoryID'];
+			return $categoryID;
+		}
+	}
+	
+	protected function findExpenseCategoryID($category){
+		$sql="SELECT * FROM expense_categories WHERE expenseCatName=:category";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':category', $category, PDO::PARAM_STR);
+		
+		$stmt->execute();
+		$result= $stmt->fetch(PDO::FETCH_ASSOC);
+		$rows=$stmt->rowCount();
+			
+		if ($rows == 0) return 0;
+		else {			
+			$categoryID=$result['expenseCatID'];
+			return $categoryID;
+		}
+	}
+	
+	
+	protected function addExpenseCategory($category){
+		$sql="INSERT INTO expense_categories VALUES (NULL, :category, 0)";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':category', $category, PDO::PARAM_STR);
+
+		$stmt->execute();
+			
+		return true;
+	}
+	
+	
+	protected function addExpenseCategoryToUserSettings($ID, $categoryID){
+		$sql="INSERT INTO expense_settings VALUES (NULL, :id, :category)";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt->bindValue(':category', $categoryID, PDO::PARAM_STR);
+
+		$stmt->execute();
+			
+		return true;
+	}
+	
+	
+	protected function rewriteExpenseRecords($ID, $newCategoryID, $oldCategoryID){
+		
+		$sql="UPDATE expenses SET categoryID=:newValue WHERE userID=:id AND categoryID=:oldValue";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt->bindValue(':newValue', $newCategoryID, PDO::PARAM_STR);
+		$stmt->bindValue(':oldValue', $oldCategoryID, PDO::PARAM_STR);
+
+		$stmt->execute();
+			
+		return true;
+	}
+
 	
 	
 }
