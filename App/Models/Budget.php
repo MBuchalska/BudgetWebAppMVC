@@ -264,9 +264,181 @@ class Budget extends \Core\Model
 		$stmt->bindValue(':data1', $Date1, PDO::PARAM_STR);
 		$stmt->bindValue(':data2', $Date2, PDO::PARAM_STR);
       	$stmt->execute();
-			//var_dump($stmt->fetchAll(PDO::FETCH_ASSOC));
+	
 		return $stmt->fetchAll(PDO::FETCH_ASSOC); 
 	}
+	
+	// Income categories settings
+	
+	public function deleteIncomeCat(){
+		$ID= $_SESSION['user_id'];
+		$categoryID = $this->whatIncome2;
+		
+		$this->deleteCategory($ID, $categoryID); 
+			
+		return true;
+	}
+	
+	
+	public function addIncomeCat(){
+		$ID= $_SESSION['user_id'];
+		$category=$this-> NewIncomeCat;
+
+		$categoryID=$this->findIncomeCategoryID($category);
+		
+		if ($categoryID == 0) {	
+				$this->addIncomeCategory($category); // add to categories			
+				$newCategoryID = $this->findIncomeCategoryID($category); // find the ID of newly added category
+				$this->addIncomeCategoryToUserSettings($ID, $newCategoryID); // adding to settings
+			}
+			
+		else {
+			$categoryID2 = $this->findIncomeCategoryInUserSettings($categoryID, $ID);
+		
+			if ($categoryID2 != 0) return false;	
+			
+			else{
+				$this->addIncomeCategoryToUserSettings($ID, $categoryID); // add an existing category to settings
+				
+				return true;
+			}
+		}	
+	}
+	
+	public function changeIncomeCat(){
+		$ID= $_SESSION['user_id'];
+		$categoryName=$this-> ChangeIncomeCat;
+		$categoryToChangeID=$this-> whatIncome3;
+		
+		$newCategoryID=$this->findIncomeCategoryID($categoryName);
+		
+		if($newCategoryID == 0){
+			$this->addIncomeCategory($categoryName); // add to categories
+			$newlyAddedCategoryID = $this->findIncomeCategoryID($categoryName); // find the ID of newly added category
+			$this->addIncomeCategoryToUserSettings($ID, $newlyAddedCategoryID); // adding to user settings
+			$this->deleteCategory($ID, $categoryToChangeID);  //delete old category
+			$this->rewriteRecords($ID, $newlyAddedCategoryID, $categoryToChangeID); // rewrite old category for new
+			
+			return true;
+		}
+		
+		else {
+			$categoryID2 = $this->findIncomeCategoryInUserSettings($newCategoryID, $ID);
+			
+			if ($categoryID2 !=0) return false;	
+			
+			else{
+				$this->addIncomeCategoryToUserSettings($ID, $newCategoryID); // add an existing category to settings
+				$this->deleteCategory($ID, $categoryToChangeID);  //delete old category
+				$this->rewriteRecords($ID, $newCategoryID, $categoryToChangeID); // rewrite old category for new
+				
+				return true;
+			}
+		}		
+	}
+	
+	
+	
+	protected function deleteCategory($ID, $categoryID){
+		$sql="DELETE FROM income_settings WHERE userID=:id AND categoryID=:categoryID";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt->bindValue(':categoryID', $categoryID, PDO::PARAM_STR);
+		
+		$stmt->execute();
+		
+		return true;
+	}
+		
+	protected function findIncomeCategoryInUserSettings($category, $ID){
+		$sql="SELECT * FROM income_settings WHERE categoryID=:category AND userID=:id";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':category', $category, PDO::PARAM_STR);
+		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
+		
+		$stmt->execute();
+		$result= $stmt->fetch(PDO::FETCH_ASSOC);
+		$rows=$stmt->rowCount();
+			
+		if ($rows == 0) return 0;
+		else {			
+			$categoryID=$result['categoryID'];
+			return $categoryID;
+		}
+	}
+	
+	protected function findIncomeCategoryID($category){
+		$sql="SELECT * FROM income_categories WHERE incomeCatName=:category";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':category', $category, PDO::PARAM_STR);
+		
+		$stmt->execute();
+		$result= $stmt->fetch(PDO::FETCH_ASSOC);
+		$rows=$stmt->rowCount();
+			
+		if ($rows == 0) return 0;
+		else {			
+			$categoryID=$result['incomeCatID'];
+			return $categoryID;
+		}
+	}
+	
+	
+	protected function addIncomeCategory($category){
+		$sql="INSERT INTO income_categories VALUES (NULL, :category, 0)";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':category', $category, PDO::PARAM_STR);
+
+		$stmt->execute();
+			
+		return true;
+	}
+	
+	
+	protected function addIncomeCategoryToUserSettings ($ID, $categoryID){
+		$sql="INSERT INTO income_settings VALUES (NULL, :id, :category)";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt->bindValue(':category', $categoryID, PDO::PARAM_STR);
+
+		$stmt->execute();
+			
+		return true;
+	}
+	
+	
+	protected function rewriteRecords($ID, $newCategoryID, $oldCategoryID){
+		
+		$sql="UPDATE incomes SET categoryID=:newValue WHERE userID=:id AND categoryID=:oldValue";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt->bindValue(':newValue', $newCategoryID, PDO::PARAM_STR);
+		$stmt->bindValue(':oldValue', $oldCategoryID, PDO::PARAM_STR);
+
+		$stmt->execute();
+			
+		return true;
+	}
+	
+	
 	
 	
 }

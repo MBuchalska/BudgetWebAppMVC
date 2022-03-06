@@ -4,16 +4,21 @@
 
 {% block body %}
 
-    <h1>Profil użytkownika </h1>
+    <h1 class="mt-4 col-md-8 mx-md-auto fs-2">Profil użytkownika </h1>
 	
-	<p> Ta część jest jeszcze w budowie </p>
-	
-	<dl class="dl-horizontal">
-		<dt>Nazwa użytkownika</dt>
-		<dd> {{ user.userName }}</dd>
-		<dt>email</dt>
-		<dd> {{ user.email }} </dd>
-	</dl>
-
-	<!-- <a href="/profile/edit">Edit</a> -->
+	<div class="container">
+		<section>
+			<div class="row">
+				<dl class="dl-horizontal col-md-5 mt-3 mx-md-auto">
+					<dt>Nazwa użytkownika</dt>
+					<dd> {{ user.userName }}</dd>
+					<dt>email</dt>
+					<dd> {{ user.email }} </dd>
+				</dl>
+		
+				<!-- <a href="/profile/edit">Edit</a> -->
+								
+			</div>
+		</section>
+	</div>
 {% endblock %}

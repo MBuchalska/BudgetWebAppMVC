@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Edytuj kategorię{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+	
+	<h1 class="mt-4 col-md-8 mx-md-auto fs-2">Ustawienia </h1>
+	<h2 class="mt-4 col-md-8 mx-md-auto fs-4">Kategorie przychodów </h2>
+		<section>
+			<div class="row mt-4 col-md-8 mx-md-auto">
+				<p> Zmień nazwę kategorii </p>
+				<p> Rekordy dodane wcześniej w zmienianej kategorii zostaną przepisane na nową </p>
+				<p> W tej chwili masz kategorie jak poniżej </p>
+				<p> Wybierz kategorię i podaj nową nazwę w polu tekstowym </p>
+					
+				<form action="/IncomeSettings/change" method="post" class="col-md-8 mx-md-auto fs-2">
+				
+				{% for  incomeRecord in income %}
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="whatIncome3" id="whatIncome2" value= "{{  incomeRecord.categoryID }}" required>
+						<label class="form-check-label" for="whatIncome3" >  {{ incomeRecord.incomeCatName }}</label>
+					</div>
+				{% endfor %}
+				
+				<input type="text" name="ChangeIncomeCat" placeholder="Nowa kategoria " onfocus="this.placeholder=''" onblur="this.placeholder='Podaj nową kategorię'" class="mt-3"> 
+				
+				<div class="mt-5">
+					<input type="submit" value="Wykonaj">
+					<input type="reset" value="Anuluj">
+				</div>
+			</form>	
+				
+			</div>
+			
+			
+		</section>
+	</div>
+{% endblock %}
