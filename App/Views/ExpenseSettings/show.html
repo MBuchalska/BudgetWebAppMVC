@@ -11,18 +11,30 @@
 		<section>
 			<div class="row mt-4 col-md-8 mx-md-auto">
 				<p> Obecnie masz takie kategorie wydatków:</p>
-				
-				{% for  expenseRecord in expense %}
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="whatExpense2" id="whatIncome2" value= "{{ expenseRecord.categoryID }}">
-						<label class="form-check-label" for="whatExpense2" >  {{ expenseRecord.expenseCatName }}</label>
-					</div>
-				{% endfor %}
+
+						<table  class="table mt-3">
+							<thead>	
+								<tr>
+									<th scope="col">Kategoria</th>
+									<th scope="col">limit miesięczny [PLN]</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for  expenseRecord in expense %}
+									<tr>
+										<td>  {{ expenseRecord.expenseCatName }} </td>
+										<td>  {{ expenseRecord.expenseLimit|number_format(2,'.','') }} </td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+
 				
 				<p class="mt-3"> Co chcesz zrobić: </p>
 				<a href="/ExpenseSettings/addcategory"><input type="button" value="Dodaj nową kategorię"></a>
 				<a href="/ExpenseSettings/changecategory"><input type="button" value="Edytuj nazwę kategorii"></a>
 				<a href="/ExpenseSettings/deleteform"><input type="button" value="Usuń istniejącą kategorię"></a>
+				<a href="/ExpenseSettings/generatelimit"><input type="button" value="Ustal limit"></a>
 				
 			</div>		
 		</section>

@@ -68,14 +68,14 @@ class Budget extends \Core\Model
    }
    
    public static function getExpenseSettings($ID){
-	   $sql = "SELECT ec.expenseCatName, es.categoryID FROM expense_categories AS ec, expense_settings AS es WHERE es.userID=:id AND es.categoryID=ec.expenseCatID ORDER BY ec.expenseCatID ASC";
+	   $sql = "SELECT ec.expenseCatName, es.categoryID, es.expenseLimit FROM expense_categories AS ec, expense_settings AS es WHERE es.userID=:id AND es.categoryID=ec.expenseCatID ORDER BY ec.expenseCatID ASC";
 			
 		$db = static::getDB();
 		$stmt=$db->prepare($sql);
 			
 		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
       	$stmt->execute();
-							
+						
 		return $stmt->fetchAll();
    }
    
@@ -613,6 +613,30 @@ class Budget extends \Core\Model
 		return true;
 	}
 
+
+	// expense limit
+	public function setExpenseLimit() {
+		$ID= $_SESSION['user_id'];			
+		
+		$limitValue=$this-> expenselimit;
+		$categoryID=$this-> whatExpense4;
+		
+		$sql="UPDATE expense_settings SET expenseLimit=:newValue WHERE userID=:id AND categoryID=:catID";
+		
+		$db = static::getDB();
+		$stmt=$db->prepare($sql);
+		
+		$stmt->bindValue(':id', $ID, PDO::PARAM_STR);
+		$stmt->bindValue(':newValue', $limitValue, PDO::PARAM_STR);
+		$stmt->bindValue(':catID', $categoryID, PDO::PARAM_STR);
+
+		$stmt->execute();
+			
+		return true;
+	}
+	
+	
+	
 	
 	
 }

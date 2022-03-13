@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Ustal limit wydatków{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+	
+	<h1 class="mt-4 col-md-8 mx-md-auto fs-2">Ustawienia </h1>
+	<h2 class="mt-4 col-md-8 mx-md-auto fs-4">Kategorie wydatków </h2>
+		<section>
+			<div class="row mt-4 col-md-8 mx-md-auto">
+				<p> Limit wydatków </p>
+				<p> Wybierz kategorię i podaj limit miesięczny wydatków w PLN </p>
+				<p> Możesz również zmienić listniejący limit </p>
+				
+				<form action="/ExpenseSettings/generate" method="post" class="col-md-8 mx-md-auto fs-2">		
+				
+				{% for  expenseRecord in expense %}
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="whatExpense4" id="whatExpense4" value= "{{ expenseRecord.categoryID }}">
+						<label class="form-check-label" for="whatExpense4" >  {{ expenseRecord.expenseCatName }}</label>
+					</div>
+				{% endfor %}
+	
+				<p class="mt-5" ><label> Limit wydatków:  <input type="number" name="expenselimit" step="0.01" required aria-label="Limit wydatków"></label></p>
+				
+				<div class="mt-5">
+					<input type="submit" value="Wykonaj">
+					<input type="reset" value="Anuluj">
+				</div>
+			</form>	
+				
+			</div>
+			
+			
+		</section>
+	</div>
+{% endblock %}

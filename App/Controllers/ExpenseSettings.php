@@ -100,5 +100,28 @@ class ExpenseSettings extends Authenticated {
 	}
 	
 	
+	// setting a monthly limit for the category
+		public function generatelimitAction(){
+		View::renderTemplate('/ExpenseSettings/generatelimit.html', [
+				'expense'=>$this->expenseCat
+		]);
+	}
+	
+		public function generateAction(){
+		
+		$expenseLimit = new Budget($_POST);
+			
+		if($expenseLimit->setExpenseLimit()){
+			Flash::addMessage('Zmieniono limit wydatków');
+			$this->redirect('/ExpenseSettings/show');
+		}
+		
+		else{
+			View::renderTemplate('ExpenseSettings/show.html',[
+				'expense'=>$this->expenseCat
+			]);
+		}		
+	}
+	
 	
 }
