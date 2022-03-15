@@ -9,19 +9,12 @@
 		<section>
 			<div class="row">	
 				<h2 class="mt-4 col-md-8 mx-md-auto fs-2"> Uzupełnij formularz i dodaj wydatek </h2>
+				
 				<form action="/Expense/create" method="post" class="col-md-8 mx-md-auto fs-2">
 					
 						<p class="mt-5" ><label> Kwota wydatku:  <input type="number" name="expencevalue" step="0.01" required aria-label="Kwota wydatku"></label></p>
 						
 						<p class="mt-5"><label aria-label="Data">  Data: <input type="date" name="expDate" id="expDate" class="form__date"  required ></label></p>
-						
-						<label class="mt-5 font-weight-bold "> Sposób płatności:</label>
-						
-						{% for pay in payment %}
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="HowToPay" id="HowToPay" value="{{ pay.categoryID }}" required>
-							<label class="form-check-label" for="HowToPay" > {{ pay.payMethCatName }}</label>	</div>
-						{% endfor %}
 						
 						<div class="form-check mt-3">
 						<label for="expCategory"> Kategoria wydatku: </label>
@@ -31,8 +24,25 @@
 						{% for  expenseRecord in expense %}
 								<option value=" {{ expenseRecord.categoryID }}"> {{ expenseRecord.expenseCatName }}</option>
 						{% endfor %}
+								</select>
 						</div>	
 						
+						<div id="expenseLimit" class="mt-3 col-md-8">
+							<span> Limit w tej kategorii: </span>   <span> value </span>
+							<p> Wykorzystano w tym miesiącu: </p>
+							<p> plus ten wydatek </p> 
+							<p> Różnica między limitem i sumą </p> 					
+						</div>
+						
+						
+						<label class="mt-5 font-weight-bold "> Sposób płatności:</label>
+						
+						{% for pay in payment %}
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="HowToPay" id="HowToPay" value="{{ pay.categoryID }}" required>
+							<label class="form-check-label" for="HowToPay" > {{ pay.payMethCatName }}</label>	</div>
+						{% endfor %}
+
 						<div class="form-check mt-3">
 							<input type="text" name="ExpComment" placeholder="Komentarz do wydatku" onfocus="this.placeholder=''" onblur="this.placeholder='Komentarz'" class="mt-3"> 
 						</div>

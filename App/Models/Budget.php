@@ -583,7 +583,7 @@ class Budget extends \Core\Model
 	
 	
 	protected function addExpenseCategoryToUserSettings($ID, $categoryID){
-		$sql="INSERT INTO expense_settings VALUES (NULL, :id, :category)";
+		$sql="INSERT INTO expense_settings VALUES (NULL, :id, :category, 0)";
 		
 		$db = static::getDB();
 		$stmt=$db->prepare($sql);

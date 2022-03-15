@@ -225,7 +225,6 @@ select:focus
 .table
 {
 	border-collapse: collapse;
-
 	width: 300px;
 	color: #130838;
 }
@@ -284,3 +283,13 @@ select:focus
 }
 
 
+#expenseLimit
+{
+	border: 1px solid black;
+	font-size: 20px;
+	border-radius: 5px;
+	background-color: #F0f0f0;
+	width: 500px;
+	padding: 5px;
+	display: none;
+}
