@@ -283,7 +283,7 @@ select:focus
 }
 
 
-#expenseLimit
+.expenseLimit
 {
 	border: 1px solid black;
 	font-size: 20px;
@@ -292,4 +292,10 @@ select:focus
 	width: 500px;
 	padding: 5px;
 	display: none;
+}
+
+.dynamicLimits
+{
+	float: left; 
+	margin-right: 5px;
 }

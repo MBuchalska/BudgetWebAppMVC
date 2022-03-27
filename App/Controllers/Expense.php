@@ -39,7 +39,21 @@ class Expense extends Authenticated {
 				'expense'=>$this->expenseCat, 'payment'=>$this->wayOfPayCat
 			]);
 		}
-			
+	}
+
+// getting expense limit for the category	
+	public function getExpenseLimitAction(){
+		
+	//getting the category ID and date from fetch	
+		$categoryID=$this->route_params['token'];   	
+				
+	// getting expense limit and sum from database
+		$expenseInfo = new Budget();
+		$expenseInfo->expLimit = round(Budget::getExpenseLimit($categoryID), 2);
+		$expenseInfo->expSum = round(Budget::getSumForExpense($categoryID), 2);
+		
+		$expenseJSON=json_encode($expenseInfo);
+		echo $expenseJSON;
 	}
 	
 	
